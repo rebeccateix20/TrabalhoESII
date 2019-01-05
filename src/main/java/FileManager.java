@@ -1,3 +1,6 @@
+import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -26,6 +29,34 @@ public class FileManager {
         return file;
     }
 */
+
+    public FileManager(){
+        JFrame frame = new JFrame("File Reader");
+        JLabel label = new JLabel("Pesquisa");
+        JButton button = new JButton("Pesquisar");
+        JTextField text = new JTextField();
+
+        frame.setSize(200,200);
+        frame.setLayout(null);
+        button.setBounds(50,50,100,50);
+        label.setSize(100,50);
+        text.setBounds(60,10,100,25);
+        frame.add(label);
+        frame.add(text);
+        frame.add(button);
+        frame.setLocation(500,100);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setVisible(true);
+
+        button.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                String stringFinal = text.getText().replaceAll("[0-9,.!?#$%&/()=\\-_\n,\\s]","");
+                System.out.println(stringFinal);
+            }
+        });
+
+    }
 
     public static String Reader(String filename) throws IOException{
         StringBuilder contentBuilder = new StringBuilder();
