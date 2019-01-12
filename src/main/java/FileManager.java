@@ -10,6 +10,7 @@ public class FileManager {
 
     private String[] fileName;
     private String[] fileContent;
+    private String[] query;
     private int[][] nOcorrencias;
     private static int DEFAULT_SIZE = 5;
 
@@ -21,6 +22,8 @@ public class FileManager {
     public String[] getFileContent() {
         return fileContent;
     }
+
+
 
     public FileManager(){
         JFrame frame = new JFrame("File Reader");
@@ -44,9 +47,9 @@ public class FileManager {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
                 //Retira da query
-                /*String stringFinal = text.getText().replaceAll("[0-9,.!?#$%&/()=\\-_\n,\\s]","");
-                System.out.println(stringFinal);*/
-                System.out.println(tratamentoString(text.getText()));
+                String aux = tratamentoString(text.getText());
+                query = aux.split(" ");
+                //printQuery(query);
             }
         });
 
@@ -54,9 +57,10 @@ public class FileManager {
 
     private String tratamentoString(String s){
         String aux;
-        aux = s.replaceAll("[0-9,.!?#$%&/()=\\-_\n,\\s]","");
+        aux = s.replaceAll("[0-9,.!?#$%&/()=\\-_\n]","");
         return aux;
     }
+
 
 
     public String[] readFiles(String directoryName) throws EmptyDirectoryException, NotFoundDirectory, IOException {
@@ -95,36 +99,6 @@ public class FileManager {
                 aux = ReadFile(fileName[i]);
                 aux = tratamentoString(aux);
                 fileContent[i] = aux;
-
-
-
-                /*
-                File file = new File(directoryName + "/" + fileName[i]);
-
-
-                BufferedReader b = null;
-
-                try {
-                    b = new BufferedReader(new FileReader(file));
-                } catch (FileNotFoundException e) {
-                    System.out.println("Problema ao abrir o ficheiro");
-                }
-
-                String aux2 = "";
-                try {
-                    while ((aux = b.readLine()) != null) {
-
-                        aux2 = aux2 + " " + aux;
-                    }
-                    fileContent[i] = aux2;
-                } catch (IOException ex) {
-                    System.out.println("Erro ao ler o ficheiro");
-                }
-
-            }
-
-            return this.fileContent;
-            */
             }
             return this.fileContent;
         }
@@ -141,6 +115,13 @@ public class FileManager {
             System.out.println("\n");
         }
 
+    }
+
+    public void printQuery(String[] query){
+        for(int i = 0; i<query.length; i++){
+            System.out.print(query[i]);
+            System.out.println("\n");
+        }
     }
 
 
@@ -162,6 +143,8 @@ public class FileManager {
         }
         return contentBuilder.toString();
     }
+
+
 
 
     }
