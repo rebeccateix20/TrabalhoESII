@@ -8,27 +8,19 @@ import java.nio.file.Paths;
 public class FileManager {
 
 
-    private String[] files;
+    private String[] fileName;
+    private String[] fileContent;
+    private int[][] nOcorrencias;
     private static int DEFAULT_SIZE = 5;
 
-    /* LEITURA SIMPLES DE FICHEIRO COM ESPAÇOS
-    public FileManager() {
-        files = new String[DEFAULT_SIZE];
+
+    public String[] getFileName() {
+        return fileName;
     }
 
-    public FileManager(int files_size){
-        files = new String[files_size];
+    public String[] getFileContent() {
+        return fileContent;
     }
-
-    public String readFile(String filePath) throws IOException {
-
-        String file = "";
-
-        file = new String(Files.readAllBytes(Paths.get(filePath)));
-
-        return file;
-    }
-*/
 
     public FileManager(){
         JFrame frame = new JFrame("File Reader");
@@ -51,14 +43,108 @@ public class FileManager {
         button.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-                String stringFinal = text.getText().replaceAll("[0-9,.!?#$%&/()=\\-_\n,\\s]","");
-                System.out.println(stringFinal);
+                //Retira da query
+                /*String stringFinal = text.getText().replaceAll("[0-9,.!?#$%&/()=\\-_\n,\\s]","");
+                System.out.println(stringFinal);*/
+                System.out.println(tratamentoString(text.getText()));
             }
         });
 
     }
 
-    public static String Reader(String filename) throws IOException{
+    private String tratamentoString(String s){
+        String aux;
+        aux = s.replaceAll("[0-9,.!?#$%&/()=\\-_\n,\\s]","");
+        return aux;
+    }
+
+
+    public String[] readFiles(String directoryName) throws EmptyDirectoryException, NotFoundDirectory, IOException {
+
+        File directory = new File(directoryName);
+
+        if (!directory.exists()) {
+            throw new NotFoundDirectory();
+        } else {
+            File[] filesList = directory.listFiles(new FilenameFilter() {
+                public boolean accept(File dir, String filename) {
+                    return filename.endsWith(".txt");
+                }
+            });
+
+
+            //Caso a pasta esteja vazia
+            if (filesList.length == 0) {
+                throw new EmptyDirectoryException();
+            }
+
+
+            fileContent = new String[filesList.length];
+            fileName = new String[filesList.length];
+
+
+            //Cria um vetor apenas com o nome dos ficheiros
+            for (int i = 0; i < filesList.length; i++) {
+                fileName[i] = filesList[i].getName();
+            }
+
+
+            //Adiciona o conteudo dos ficheiros a um vetor de string
+            for (int i = 0; i < fileName.length; i++) {
+                String aux = "";
+                aux = ReadFile(fileName[i]);
+                aux = tratamentoString(aux);
+                fileContent[i] = aux;
+
+
+
+                /*
+                File file = new File(directoryName + "/" + fileName[i]);
+
+
+                BufferedReader b = null;
+
+                try {
+                    b = new BufferedReader(new FileReader(file));
+                } catch (FileNotFoundException e) {
+                    System.out.println("Problema ao abrir o ficheiro");
+                }
+
+                String aux2 = "";
+                try {
+                    while ((aux = b.readLine()) != null) {
+
+                        aux2 = aux2 + " " + aux;
+                    }
+                    fileContent[i] = aux2;
+                } catch (IOException ex) {
+                    System.out.println("Erro ao ler o ficheiro");
+                }
+
+            }
+
+            return this.fileContent;
+            */
+            }
+            return this.fileContent;
+        }
+    }
+
+    public void printStrings(String[] fileCont, String[] filesnames){
+        for(int i = 0; i<fileCont.length; i++){
+                System.out.print(fileCont[i]);
+            System.out.println("\n");
+        }
+
+        for(int j = 0; j<filesnames.length; j++){
+            System.out.print(filesnames[j]);
+            System.out.println("\n");
+        }
+
+    }
+
+
+    public static String ReadFile(String filename) throws IOException{
         StringBuilder contentBuilder = new StringBuilder();
         try (BufferedReader br = new BufferedReader(new FileReader(filename)))
         {
@@ -78,10 +164,5 @@ public class FileManager {
     }
 
 
-    public static Boolean Writer(String str, String filename)throws FileNotFoundException{
-        try (PrintWriter out = new PrintWriter(filename)) {
-            out.println(str);
-        return true;}
-
     }
-}
+
