@@ -12,6 +12,7 @@ public class FileManager {
     private String[] fileContent;
     private String[] query;
     private int[][] matrizM;
+    private int contaDocs;
     private static int DEFAULT_SIZE = 5;
 
 
@@ -52,7 +53,9 @@ public class FileManager {
                     String aux = tratamentoString(text.getText());
                     query = aux.split(" ");
                     matrizM();
+                    matrizQ();
                     UpdateMatrizM(matrizM());
+                    UpdateMatrizQ(matrizQ());
                 }
                 //printQuery(query);
             }
@@ -133,31 +136,73 @@ public class FileManager {
                 matrizM[i][j] = count;
             }
         }
-
-        //System.out.println("CONT; " + count);
-        //printMatriz(matrizM);
+        
         return matrizM;
     }
 
+    public int[] matrizQ() {
+        int count, h;
+        int[] matrizQ = new int[fileContent.length];
+        String[] queryAux = query;
+        //System.out.println("FCL: " + fileContent.length);
+        for (int i = 0; i < fileContent.length; i++) {
+            count = 0;
+            h = 0;
+            while (h < queryAux.length) {
+                if (fileContent[i].compareTo(queryAux[h]) == 0) {
+                    count++;
+                }
+                h++;
+            }
+            matrizQ[i] = count;
+        }
+        //printQuery(matrizQ);
+        return matrizQ;
+    }
+
     public double[][] UpdateMatrizM(int[][] matriz) {
-        int contadoc = 0;
         double[][] matrizOut = new double[fileName.length][fileContent.length];
         for (int i = 0; i < fileName.length; i++) {
             for (int j = 0; j < fileContent.length; j++) {
-                contadoc = 0;
+                contaDocs = 0;
                 for (int h = 0; h < fileName.length; h++) {
-                    if (matrizM[h][j] > 0) contadoc++;
+                    if (matrizM[h][j] > 0) contaDocs++;
                 }
-                if (contadoc == 0) {
+                if (contaDocs == 0) {
                     matrizOut[i][j] = 0;
                 } else {
-                    matrizOut[i][j] = matriz[i][j] * (1 + Math.log10((fileName.length / contadoc)));
+                    matrizOut[i][j] = matriz[i][j] * (1 + Math.log10((fileName.length / contaDocs)));
                 }
             }
         }
-        printMatriz(matrizOut);
+
         return matrizOut;
 
+    }
+
+
+    public double[] UpdateMatrizQ(int[] matriz) {
+
+        double[] matrizOut = new double[fileContent.length];
+        for (int i = 0; i < fileContent.length; i++) {
+            contaDocs = 0;
+
+            for (int h = 0; h < fileName.length; h++) {
+                if (matrizM[h][i] > 0) contaDocs++;
+            }
+            System.out.println("CONTA FOC: " + contaDocs);
+            if (contaDocs == 0) {
+                matrizOut[i] = 0;
+            } else {
+                System.out.println("CONTA FOC: " + contaDocs);
+                System.out.println("FILENAMELENGHT " + fileName.length );
+                matrizOut[i] = matriz[i] * (1 + Math.log10((fileName.length / contaDocs)));
+                System.out.println("MO[i] " + matrizOut[i]);
+            }
+            System.out.println("FILECONTENT: " + fileContent.length);
+        }
+        //printQuery(matrizOut);
+        return matrizOut;
     }
 
     public void printStrings(String[] fileCont, String[] filesnames) {
@@ -181,13 +226,11 @@ public class FileManager {
         }
     }
 
-    public void printQuery(String[] query) {
+    public void printQuery(double[] query) {
         for (int i = 0; i < query.length; i++) {
-            System.out.print(query[i]);
-            System.out.println("\n");
+            System.out.println("Valor: " + query[i]);
         }
     }
-
 
     public static String ReadFile(String filename) throws IOException {
         StringBuilder contentBuilder = new StringBuilder();
