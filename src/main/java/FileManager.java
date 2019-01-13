@@ -136,7 +136,7 @@ public class FileManager {
                 matrizM[i][j] = count;
             }
         }
-        
+
         return matrizM;
     }
 
@@ -185,21 +185,23 @@ public class FileManager {
 
         double[] matrizOut = new double[fileContent.length];
         for (int i = 0; i < fileContent.length; i++) {
-            contaDocs = 0;
 
+            //System.out.println("I = " + i);
+            //printMatriz(matrizM);
             for (int h = 0; h < fileName.length; h++) {
                 if (matrizM[h][i] > 0) contaDocs++;
+                    //System.out.println("Conta Docs: " + contaDocs);}
             }
-            System.out.println("CONTA FOC: " + contaDocs);
+            //System.out.println("CONTA FOC: " + contaDocs);
             if (contaDocs == 0) {
                 matrizOut[i] = 0;
             } else {
-                System.out.println("CONTA FOC: " + contaDocs);
-                System.out.println("FILENAMELENGHT " + fileName.length );
+                //System.out.println("CONTA FOC: " + contaDocs);
+                //System.out.println("FILENAMELENGHT " + fileName.length );
                 matrizOut[i] = matriz[i] * (1 + Math.log10((fileName.length / contaDocs)));
-                System.out.println("MO[i] " + matrizOut[i]);
+                //System.out.println("MO[i] " + matrizOut[i]);
             }
-            System.out.println("FILECONTENT: " + fileContent.length);
+            //System.out.println("FILECONTENT: " + fileContent.length);
         }
         //printQuery(matrizOut);
         return matrizOut;
@@ -218,7 +220,7 @@ public class FileManager {
 
     }
 
-    public void printMatriz(double[][] matriz) {
+    public void printMatriz(int[][] matriz) {
         for (int i = 0; i < matriz.length; i++) {
             for (int j = 0; j < matriz[i].length; j++) {
                 System.out.println("Valor: " + matriz[i][j]);
